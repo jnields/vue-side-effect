@@ -28,7 +28,7 @@ const { Provider: TitleProvider, WithSideEffect } = withSideEffect(
 )(Component);
 
 
-const App = {
+const App = Vue.extend({
   props: {
     titleContext: {
       default: () => ({}),
@@ -43,5 +43,10 @@ const App = {
       </Provider>
     )
   }
-};
+});
+
+// server.js
+const titleContext = {};
+const markup = renderToString(new App({ propsData: { titleContext } }));
+const title = titleContext.state;
 ```
