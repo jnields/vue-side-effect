@@ -50,6 +50,9 @@ export default ({
           },
         };
       },
+      render() {
+        return this.$slots.default;
+      },
     };
 
     const NullComponent = {
@@ -66,9 +69,10 @@ export default ({
           throw new Error('cannot render a side-effect without a side-effect Provider');
         }
         instances.push(this);
-        if (!isServer || !mapStateOnServer) return;
-        const nextState = reducePropsToState(mapInstances(instances));
-        this[CONTEXT_KEY].staticContext.state = mapStateOnServer(nextState);
+        if (!isServer) return;
+        let nextState = reducePropsToState(mapInstances(instances));
+        if (mapStateOnServer) nextState = mapStateOnServer(nextState);
+        this[CONTEXT_KEY].staticContext.state = nextState;
       },
       mounted() {
         this[CONTEXT_KEY].provider.$forceUpdate();
